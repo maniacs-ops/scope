@@ -250,6 +250,7 @@ function shiftLayoutToCenter(layout, opts) {
   return result;
 }
 
+
 /**
  * Adds `points` array to edge based on location of source and target
  * @param {Map} edge           new edge
@@ -266,7 +267,7 @@ function setSimpleEdgePoints(edge, nodeCache) {
 }
 
 
-function uniqueRowConstraint(layout, options) {
+export function uniqueRowConstraint(layout, options) {
   const result = Object.assign({}, layout);
   const scale = options.scale || DEFAULT_SCALE;
   const nodeHeight = scale(NODE_SIZE_FACTOR);
@@ -285,7 +286,6 @@ function uniqueRowConstraint(layout, options) {
     .range([nodeWidth, options.width - nodeWidth])
     .clamp(false);
 
-  console.log('uniqueRowConstraint', options.height);
   result.nodes = layout.nodes.map(node => node.merge({
     x: xScale(node.get('x')),
     y: nodeOrder.get(node.get('id')) * rowHeight + nodeHeight * 0.5 + margins.top + 2

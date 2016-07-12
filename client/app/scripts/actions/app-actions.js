@@ -35,6 +35,11 @@ export function toggleHelp() {
 }
 
 
+export function toggleGridMode(enabled) {
+  return {type: ActionTypes.SET_GRID_MODE, enabled};
+}
+
+
 export function sortOrderChanged(newOrder) {
   return {
     type: ActionTypes.SORT_ORDER_CHANGED,
