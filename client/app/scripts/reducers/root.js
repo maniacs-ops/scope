@@ -625,6 +625,7 @@ export function rootReducer(state = initialState, action) {
         selectedNodeId: action.state.selectedNodeId,
         pinnedMetricType: action.state.pinnedMetricType
       });
+      state = state.set('gridMode', action.state.mode === 'grid');
       if (action.state.showingNetworks) {
         state = state.set('showingNetworks', action.state.showingNetworks);
       }

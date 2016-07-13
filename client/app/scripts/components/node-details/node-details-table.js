@@ -194,6 +194,8 @@ export default class NodeDetailsTable extends React.Component {
               {nodes && nodes.map(node => (
                 <NodeDetailsTableRow
                   key={node.id}
+                  selected={this.props.highlightedNodeIds &&
+                    this.props.highlightedNodeIds.has(node.id)}
                   node={node}
                   nodeIdKey={nodeIdKey}
                   columns={columns}

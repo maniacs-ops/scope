@@ -75,8 +75,6 @@ class Nodes extends React.Component {
           <NodesGrid {...this.state}
             nodeSize="24"
             nodes={nodes}
-            width={1300}
-            height={780}
             margins={CANVAS_MARGINS}
             layoutPrecision={layoutPrecision}
             highlightedNodeIds={highlightedNodeIds}
