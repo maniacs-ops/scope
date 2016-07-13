@@ -182,16 +182,14 @@ function layoutSingleNodes(layout, opts) {
     const rows = Math.ceil(singleNodes.size / columns);
     let row = 0;
     let col = 0;
-    let singleX;
-    let singleY;
     nodes = nodes.sortBy(node => node.get('rank')).map(node => {
       if (singleNodes.has(node.get('id'))) {
         if (col === columns) {
           col = 0;
           row++;
         }
-        singleX = col * (nodesep + nodeWidth) + offsetX;
-        singleY = row * (ranksep + nodeHeight) + offsetY;
+        const singleX = col * (nodesep + nodeWidth) + offsetX;
+        const singleY = row * (ranksep + nodeHeight) + offsetY;
         col++;
         return node.merge({
           x: singleX,
@@ -200,8 +198,6 @@ function layoutSingleNodes(layout, opts) {
       }
       return node;
     });
-
-    console.log(singleX, singleY);
 
     // adjust layout dimensions if graph is now bigger
     result.width = Math.max(layout.width, columns * nodeWidth + (columns - 1) * nodesep);

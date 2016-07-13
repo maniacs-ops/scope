@@ -126,9 +126,9 @@ class App extends React.Component {
 
         <Sidebar>
           <Status />
+          <GridModeSelector />
           {showingMetricsSelector && <MetricSelector />}
           {showingNetworkSelector && <NetworkSelector />}
-          {showingNetworkSelector && <GridModeSelector />}
           <TopologyOptions />
         </Sidebar>
 

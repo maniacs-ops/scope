@@ -60,7 +60,7 @@ class NodesChart extends React.Component {
       // re-apply cached canvas zoom/pan to d3 behavior (or set defaul values)
       const defaultZoom = { scale: 1, panTranslateX: 0, panTranslateY: 0, hasZoomed: false };
       const nextZoom = this.state.zoomCache[nextProps.topologyId] || defaultZoom;
-      if (nextZoom && this.zoom) {
+      if (this.zoom && nextZoom) {
         this.zoom.scale(nextZoom.scale);
         this.zoom.translate([nextZoom.panTranslateX, nextZoom.panTranslateY]);
       }
@@ -78,8 +78,10 @@ class NodesChart extends React.Component {
     }
 
     // reset layout dimensions only when forced
-    state.height = nextProps.height;
-    state.width = nextProps.width;
+    // state.height = nextProps.height;
+    // state.width = nextProps.width;
+    state.height = nextProps.forceRelayout ? nextProps.height : (state.height || nextProps.height);
+    state.width = nextProps.forceRelayout ? nextProps.width : (state.width || nextProps.width);
 
     // _.assign(state, this.updateGraphState(nextProps, state));
     if (nextProps.forceRelayout || nextProps.nodes !== this.props.nodes) {
@@ -324,7 +326,6 @@ class NodesChart extends React.Component {
     const stateEdges = this.initEdges(props.nodes, stateNodes);
     const nodeScale = this.getNodeScale(props.nodes, state.width, state.height);
     const nextState = { nodeScale };
-    console.log(props.nodeOrder);
     const nodeOrder = props.nodeOrder || makeMap(stateNodes
       .toList()
       .sortBy(n => n.get('label'))
@@ -367,6 +368,7 @@ class NodesChart extends React.Component {
 
     if (!this.props.noZoom && !state.hasZoomed && zoomFactor > 0 && zoomFactor < 1) {
       zoomScale = zoomFactor;
+      console.log(zoomScale);
       // saving in d3's behavior cache
       if (this.zoom) {
         this.zoom.scale(zoomFactor);

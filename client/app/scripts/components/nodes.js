@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-// import NodesChart from '../charts/nodes-chart';
+import NodesChart from '../charts/nodes-chart';
 import NodesGrid from '../charts/nodes-grid';
 import NodesError from '../charts/nodes-error';
 import { isTopologyEmpty } from '../utils/topology-utils';
@@ -71,15 +71,20 @@ class Nodes extends React.Component {
     return (
       <div className="nodes-wrapper">
         {topologyEmpty && errorEmpty}
-        <NodesGrid {...this.state}
-          nodeSize="24"
-          nodes={nodes}
-          width={1300}
-          height={780}
-          margins={CANVAS_MARGINS}
-          layoutPrecision={layoutPrecision}
-          highlightedNodeIds={highlightedNodeIds}
-        />
+        {this.props.gridMode ?
+          <NodesGrid {...this.state}
+            nodeSize="24"
+            nodes={nodes}
+            width={1300}
+            height={780}
+            margins={CANVAS_MARGINS}
+            layoutPrecision={layoutPrecision}
+            highlightedNodeIds={highlightedNodeIds}
+          /> :
+         <NodesChart {...this.state}
+           margins={CANVAS_MARGINS}
+           layoutPrecision={layoutPrecision}
+           />}
       </div>
     );
   }
@@ -98,6 +103,7 @@ class Nodes extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    gridMode: state.get('gridMode'),
     nodes: state.get('nodes'),
     topologyEmpty: isTopologyEmpty(state),
     highlightedNodeIds: state.get('highlightedNodeIds')
