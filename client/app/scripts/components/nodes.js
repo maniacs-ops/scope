@@ -7,7 +7,7 @@ import NodesError from '../charts/nodes-error';
 import { isTopologyEmpty } from '../utils/topology-utils';
 import { CANVAS_MARGINS } from '../constants/styles';
 
-const navbarHeight = 160;
+const navbarHeight = 168;
 const marginTop = 0;
 
 /**
@@ -75,6 +75,7 @@ class Nodes extends React.Component {
           <NodesGrid {...this.state}
             nodeSize="24"
             nodes={nodes}
+            topologyId={this.props.currentTopologyId}
             margins={CANVAS_MARGINS}
             layoutPrecision={layoutPrecision}
             highlightedNodeIds={highlightedNodeIds}
@@ -103,6 +104,7 @@ function mapStateToProps(state) {
   return {
     gridMode: state.get('gridMode'),
     nodes: state.get('nodes'),
+    currentTopologyId: state.get('currentTopologyId'),
     topologyEmpty: isTopologyEmpty(state),
     highlightedNodeIds: state.get('highlightedNodeIds')
   };

@@ -20,23 +20,25 @@ function getValuesForNode(node) {
 }
 
 
-function renderValues(node, columns = []) {
+function renderValues(node, columns = [], columnWidths = []) {
   const fields = getValuesForNode(node);
-  return columns.map(({id}) => {
+  return columns.map(({id}, i) => {
     const field = fields[id];
+    const style = { width: columnWidths[i] };
     if (field) {
       if (field.valueType === 'metadata') {
         return (
           <td className="node-details-table-node-value truncate" title={field.value}
+            style={style}
             key={field.id}>
             {field.value}
           </td>
         );
       }
-      return <NodeDetailsTableNodeMetric key={field.id} {...field} />;
+      return <NodeDetailsTableNodeMetric style={style} key={field.id} {...field} />;
     }
     // empty cell to complete the row for proper hover
-    return <td className="node-details-table-node-value" key={id} />;
+    return <td className="node-details-table-node-value" style={style} key={id} />;
   });
 }
 
@@ -53,13 +55,15 @@ export default class NodeDetailsTableRow extends React.Component {
   }
 
   render() {
-    const { node, nodeIdKey, topologyId, columns, onMouseOverRow, selected } = this.props;
-    const values = renderValues(node, columns);
+    const { node, nodeIdKey, topologyId, columns, onMouseOverRow, selected, widths } = this.props;
+    const [firstColumnWidth, ...columnWidths] = widths;
+    console.log(widths);
+    const values = renderValues(node, columns, columnWidths);
     const nodeId = node[nodeIdKey];
     const className = classNames('node-details-table-node', { selected });
     return (
       <tr onMouseOver={onMouseOverRow && this.onMouseOver} className={className}>
-        <td className="node-details-table-node-label truncate">
+        <td className="node-details-table-node-label truncate" style={{ width: firstColumnWidth }}>
           <NodeDetailsTableNodeLink
             topologyId={topologyId}
             nodeId={nodeId}

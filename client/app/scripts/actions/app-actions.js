@@ -36,7 +36,13 @@ export function toggleHelp() {
 
 
 export function toggleGridMode(enabled) {
-  return {type: ActionTypes.SET_GRID_MODE, enabled};
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.SET_GRID_MODE,
+      enabled
+    });
+    updateRoute(getState);
+  };
 }
 
 

@@ -35,10 +35,15 @@ export default class NodesGrid extends React.Component {
     const { margins, nodes, height } = this.props;
     const cmpStyle = {
       height,
-      paddingTop: margins.top,
-      paddingBottom: margins.bottom,
+      marginTop: margins.top,
       paddingLeft: margins.left,
       paddingRight: margins.right,
+    };
+    const tbodyHeight = height - 24 - 18;
+    const className = 'scroll-body';
+    const tbodyStyle = {
+      height: `${tbodyHeight}px`,
+      paddingBottom: 160
     };
 
     const detailsData = {
@@ -52,6 +57,9 @@ export default class NodesGrid extends React.Component {
       <div className="nodes-grid">
         <NodeDetailsTable
           style={cmpStyle}
+          className={className}
+          tbodyStyle={tbodyStyle}
+          topologyId={this.props.topologyId}
           onMouseOut={this.onMouseOut}
           onMouseOverRow={this.onMouseOverRow}
           {...detailsData}

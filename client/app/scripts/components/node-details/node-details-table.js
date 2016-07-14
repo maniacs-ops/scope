@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import { Map as makeMap } from 'immutable';
+import classNames from 'classnames';
 
 import ShowMore from '../show-more';
 import NodeDetailsTableRow from './node-details-table-row';
@@ -13,8 +14,15 @@ function isNumberField(field) {
 
 const COLUMN_WIDTHS = {
   port: '44px',
-  count: '70px'
+  count: '70px',
+  process_cpu_usage_percent: '80px',
+  threads: '80px',
+  process_memory_usage_bytes: '80px',
+  open_files_count: '80px',
+  ppid: '80px',
+  pid: '80px',
 };
+
 
 function getDefaultSortBy(columns, nodes) {
   // default sorter specified by columns
@@ -75,6 +83,31 @@ function getSortedNodes(nodes, columns, sortBy, sortedDesc) {
 }
 
 
+function getColumnsWidths(headers) {
+  return headers.map((h, i) => {
+    //
+    // Beauty hack: adjust first column width if there are only few columns;
+    // this assumes the other columns are narrow metric columns of 20% table width
+    //
+    if (i === 0) {
+      if (headers.length === 2) {
+        return '66%';
+      } else if (headers.length === 3) {
+        return '50%';
+      } else if (headers.length >= 3 && headers.length < 5) {
+        return '33%';
+      }
+    }
+
+    //
+    // More beauty hacking, ports and counts can only get so big, free up WS for other longer
+    // fields like IPs!
+    //
+    return COLUMN_WIDTHS[h.id];
+  });
+}
+
+
 export default class NodeDetailsTable extends React.Component {
 
   constructor(props, context) {
@@ -101,33 +134,20 @@ export default class NodeDetailsTable extends React.Component {
     this.setState({limit});
   }
 
+  getColumnHeaders() {
+    const columns = this.props.columns || [];
+    return [{id: 'label', label: this.props.label}].concat(columns);
+  }
+
   renderHeaders() {
     if (this.props.nodes && this.props.nodes.length > 0) {
-      const columns = this.props.columns || [];
-      const headers = [{id: 'label', label: this.props.label}].concat(columns);
+      const headers = this.getColumnHeaders();
+      const widths = getColumnsWidths(headers);
       const defaultSortBy = getDefaultSortBy(this.props);
-
-      // Beauty hack: adjust first column width if there are only few columns;
-      // this assumes the other columns are narrow metric columns of 20% table width
-      if (headers.length === 2) {
-        headers[0].width = '66%';
-      } else if (headers.length === 3) {
-        headers[0].width = '50%';
-      } else if (headers.length >= 3 && headers.length < 5) {
-        headers[0].width = '33%';
-      }
-
-      //
-      // More beauty hacking, ports and counts can only get so big, free up WS for other longer
-      // fields like IPs!
-      //
-      headers.forEach(h => {
-        h.width = COLUMN_WIDTHS[h.id];
-      });
 
       return (
         <tr>
-          {headers.map(header => {
+          {headers.map((header, i) => {
             const headerClasses = ['node-details-table-header', 'truncate'];
             const onHeaderClick = ev => {
               this.handleHeaderClick(ev, header.id);
@@ -144,8 +164,8 @@ export default class NodeDetailsTable extends React.Component {
 
             // set header width in percent
             const style = {};
-            if (header.width) {
-              style.width = header.width;
+            if (widths[i]) {
+              style.width = widths[i];
             }
 
             return (
@@ -183,14 +203,16 @@ export default class NodeDetailsTable extends React.Component {
       React.cloneElement(child, { nodeOrder })
     ));
 
+    const className = classNames('node-details-table-wrapper-wrapper', this.props.className);
+
     return (
-      <div className="node-details-table-wrapper-wrapper" style={this.props.style}>
+      <div className={className} style={this.props.style}>
         <div className="node-details-table-wrapper" onMouseOut={this.props.onMouseOut}>
           <table className="node-details-table">
             <thead>
               {headers}
             </thead>
-            <tbody>
+            <tbody style={this.props.tbodyStyle}>
               {nodes && nodes.map(node => (
                 <NodeDetailsTableRow
                   key={node.id}
@@ -198,6 +220,7 @@ export default class NodeDetailsTable extends React.Component {
                     this.props.highlightedNodeIds.has(node.id)}
                   node={node}
                   nodeIdKey={nodeIdKey}
+                  widths={getColumnsWidths(this.getColumnHeaders())}
                   columns={columns}
                   onMouseOverRow={onMouseOverRow}
                   topologyId={topologyId} />
