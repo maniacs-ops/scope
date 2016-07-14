@@ -413,7 +413,6 @@ function mapStateToProps(state) {
   return {
     adjacentNodes: getAdjacentNodes(state),
     forceRelayout: state.get('forceRelayout'),
-    nodes: state.get('nodes').filter(node => !node.get('filtered')),
     selectedNodeId: state.get('selectedNodeId'),
     topologyId: state.get('currentTopologyId'),
     topologyOptions: getActiveTopologyOptions(state)

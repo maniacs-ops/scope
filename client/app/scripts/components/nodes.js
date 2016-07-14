@@ -81,6 +81,7 @@ class Nodes extends React.Component {
             highlightedNodeIds={highlightedNodeIds}
           /> :
          <NodesChart {...this.state}
+           nodes={nodes}
            margins={CANVAS_MARGINS}
            layoutPrecision={layoutPrecision}
            />}
@@ -103,7 +104,7 @@ class Nodes extends React.Component {
 function mapStateToProps(state) {
   return {
     gridMode: state.get('gridMode'),
-    nodes: state.get('nodes'),
+    nodes: state.get('nodes').filter(node => !node.get('filtered')),
     currentTopologyId: state.get('currentTopologyId'),
     topologyEmpty: isTopologyEmpty(state),
     highlightedNodeIds: state.get('highlightedNodeIds')
