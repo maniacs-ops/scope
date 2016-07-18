@@ -7,7 +7,7 @@ import NodesError from '../charts/nodes-error';
 import { isTopologyEmpty } from '../utils/topology-utils';
 import { CANVAS_MARGINS } from '../constants/styles';
 
-const navbarHeight = 168;
+const navbarHeight = 194;
 const marginTop = 0;
 
 /**
