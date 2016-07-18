@@ -7,7 +7,6 @@ import NodeDetailsTable from '../components/node-details/node-details-table';
 import { clickNode, enterNode, leaveNode, sortOrderChanged } from '../actions/app-actions';
 
 import NodeDetailsRelatives from '../components/node-details/node-details-relatives';
-import NodeDetailsTableNodeLink from '../components/node-details/node-details-table-node-link';
 import { getNodeColor } from '../utils/color-utils';
 
 
@@ -34,7 +33,8 @@ function renderIdCell(props, onClick) {
 
   return (
     <div className="nodes-grid-id-column" onClick={onClick}>
-      <i style={style} className="fa fa-square" /> <NodeDetailsTableNodeLink {...props} />
+      <i style={style} className="fa fa-square" /> <span className="truncate">{props.label}
+      </span>
       {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
     </div>
   );
