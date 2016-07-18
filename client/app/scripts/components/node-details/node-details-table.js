@@ -120,8 +120,9 @@ export default class NodeDetailsTable extends React.Component {
     this.DEFAULT_LIMIT = 5;
     this.state = {
       limit: props.limit || this.DEFAULT_LIMIT,
-      sortedDesc: true,
-      sortBy: null
+      sortedDesc: this.props.sortedDesc,
+      // FIXME: make sure this is initialised to true if not provided (null/undefined).
+      sortBy: this.props.sortBy
     };
     this.handleLimitClick = this.handleLimitClick.bind(this);
   }
@@ -132,6 +133,7 @@ export default class NodeDetailsTable extends React.Component {
       ? !this.state.sortedDesc : this.state.sortedDesc;
     const sortBy = headerId;
     this.setState({sortBy, sortedDesc});
+    this.props.onSortChange(sortBy, sortedDesc);
   }
 
   handleLimitClick() {
@@ -246,5 +248,6 @@ export default class NodeDetailsTable extends React.Component {
 
 
 NodeDetailsTable.defaultProps = {
-  nodeIdKey: 'id' // key to identify a node in a row (used for topology links)
+  nodeIdKey: 'id',  // key to identify a node in a row (used for topology links)
+  onSortChange: () => {},
 };

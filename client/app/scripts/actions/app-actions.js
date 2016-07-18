@@ -46,10 +46,13 @@ export function toggleGridMode(enabled) {
 }
 
 
-export function sortOrderChanged(newOrder) {
-  return {
-    type: ActionTypes.SORT_ORDER_CHANGED,
-    newOrder
+export function sortOrderChanged(sortBy, sortedDesc) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ActionTypes.SORT_ORDER_CHANGED,
+      sortBy, sortedDesc
+    });
+    updateRoute(getState);
   };
 }
 

@@ -64,14 +64,15 @@ class Nodes extends React.Component {
   }
 
   render() {
-    const { nodes, topologyEmpty, selectedNodeId } = this.props;
+    const { nodes, topologyEmpty, selectedNodeId, gridMode, gridSortBy,
+      gridSortedDesc } = this.props;
     const layoutPrecision = getLayoutPrecision(nodes.size);
     const errorEmpty = this.renderEmptyTopologyError(topologyEmpty);
 
     return (
       <div className="nodes-wrapper">
         {topologyEmpty && errorEmpty}
-        {this.props.gridMode ?
+        {gridMode ?
           <NodesGrid {...this.state}
             nodeSize="24"
             nodes={nodes}
@@ -79,6 +80,8 @@ class Nodes extends React.Component {
             margins={CANVAS_MARGINS}
             layoutPrecision={layoutPrecision}
             selectedNodeId={selectedNodeId}
+            gridSortBy={gridSortBy}
+            gridSortedDesc={gridSortedDesc}
           /> :
          <NodesChart {...this.state}
            nodes={nodes}
@@ -104,6 +107,8 @@ class Nodes extends React.Component {
 function mapStateToProps(state) {
   return {
     gridMode: state.get('gridMode'),
+    gridSortBy: state.get('gridSortBy'),
+    gridSortedDesc: state.get('gridSortedDesc'),
     nodes: state.get('nodes').filter(node => !node.get('filtered')),
     currentTopologyId: state.get('currentTopologyId'),
     topologyEmpty: isTopologyEmpty(state),

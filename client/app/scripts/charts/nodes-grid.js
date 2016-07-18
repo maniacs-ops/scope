@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Set as makeSet, List as makeList, Map as makeMap } from 'immutable';
 import NodeDetailsTable from '../components/node-details/node-details-table';
-import { clickNode, enterNode, leaveNode } from '../actions/app-actions';
+import { clickNode, enterNode, leaveNode, sortOrderChanged } from '../actions/app-actions';
 
 import NodeDetailsRelatives from '../components/node-details/node-details-relatives';
 import NodeDetailsTableNodeLink from '../components/node-details/node-details-table-node-link';
@@ -48,6 +48,7 @@ class NodesGrid extends React.Component {
 
     this.renderIdCell = this.renderIdCell.bind(this);
     this.clickRow = this.clickRow.bind(this);
+    this.onSortChange = this.onSortChange.bind(this);
   }
 
   clickRow(ev, nodeId, nodeLabel) {
@@ -69,8 +70,12 @@ class NodesGrid extends React.Component {
     leaveNode();
   }
 
+  onSortChange(sortBy, sortedDesc) {
+    this.props.sortOrderChanged(sortBy, sortedDesc);
+  }
+
   render() {
-    const { margins, nodes, height } = this.props;
+    const { margins, nodes, height, gridSortBy, gridSortedDesc } = this.props;
     const cmpStyle = {
       height,
       marginTop: margins.top,
@@ -101,7 +106,10 @@ class NodesGrid extends React.Component {
           topologyId={this.props.topologyId}
           onMouseOut={this.onMouseOut}
           onMouseOverRow={this.onMouseOverRow}
+          onSortChange={this.onSortChange}
           {...detailsData}
+          sortBy={gridSortBy}
+          sortedDesc={gridSortedDesc}
           selectedNodeId={this.props.selectedNodeId}
           limit={1000} />
       </div>
@@ -112,5 +120,5 @@ class NodesGrid extends React.Component {
 
 export default connect(
   () => ({}),
-  { clickNode }
+  { clickNode, sortOrderChanged }
 )(NodesGrid);
