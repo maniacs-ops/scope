@@ -64,7 +64,7 @@ class Nodes extends React.Component {
   }
 
   render() {
-    const { nodes, topologyEmpty, highlightedNodeIds } = this.props;
+    const { nodes, topologyEmpty, selectedNodeId } = this.props;
     const layoutPrecision = getLayoutPrecision(nodes.size);
     const errorEmpty = this.renderEmptyTopologyError(topologyEmpty);
 
@@ -78,7 +78,7 @@ class Nodes extends React.Component {
             topologyId={this.props.currentTopologyId}
             margins={CANVAS_MARGINS}
             layoutPrecision={layoutPrecision}
-            highlightedNodeIds={highlightedNodeIds}
+            selectedNodeId={selectedNodeId}
           /> :
          <NodesChart {...this.state}
            nodes={nodes}
@@ -107,7 +107,7 @@ function mapStateToProps(state) {
     nodes: state.get('nodes').filter(node => !node.get('filtered')),
     currentTopologyId: state.get('currentTopologyId'),
     topologyEmpty: isTopologyEmpty(state),
-    highlightedNodeIds: state.get('highlightedNodeIds')
+    selectedNodeId: state.get('selectedNodeId')
   };
 }
 

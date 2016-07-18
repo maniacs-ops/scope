@@ -1,9 +1,10 @@
 /* eslint react/jsx-no-bind: "off", no-multi-comp: "off" */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { Set as makeSet, List as makeList, Map as makeMap } from 'immutable';
 import NodeDetailsTable from '../components/node-details/node-details-table';
-import { enterNode, leaveNode } from '../actions/app-actions';
+import { clickNode, enterNode, leaveNode } from '../actions/app-actions';
 
 import NodeDetailsRelatives from '../components/node-details/node-details-relatives';
 import NodeDetailsTableNodeLink from '../components/node-details/node-details-table-node-link';
@@ -26,13 +27,13 @@ function getColumns(nodes) {
 }
 
 
-function renderIdCell(props) {
+function renderIdCell(props, onClick) {
   const style = {
     color: getNodeColor(props.rank, props.label_major)
   };
 
   return (
-    <div>
+    <div className="nodes-grid-id-column" onClick={onClick}>
       <i style={style} className="fa fa-square" /> <NodeDetailsTableNodeLink {...props} />
       {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
     </div>
@@ -40,7 +41,25 @@ function renderIdCell(props) {
 }
 
 
-export default class NodesGrid extends React.Component {
+class NodesGrid extends React.Component {
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.renderIdCell = this.renderIdCell.bind(this);
+    this.clickRow = this.clickRow.bind(this);
+  }
+
+  clickRow(ev, nodeId, nodeLabel) {
+    if (ev.target.className !== 'nodes-grid-id-column') {
+      return;
+    }
+    this.props.clickNode(nodeId, nodeLabel);
+  }
+
+  renderIdCell(props) {
+    return renderIdCell(props, (ev) => this.clickRow(ev, props.id, props.label));
+  }
 
   onMouseOverRow(node) {
     enterNode(node.id);
@@ -77,15 +96,21 @@ export default class NodesGrid extends React.Component {
         <NodeDetailsTable
           style={cmpStyle}
           className={className}
-          renderIdCell={renderIdCell}
+          renderIdCell={this.renderIdCell}
           tbodyStyle={tbodyStyle}
           topologyId={this.props.topologyId}
           onMouseOut={this.onMouseOut}
           onMouseOverRow={this.onMouseOverRow}
           {...detailsData}
-          highlightedNodeIds={this.props.highlightedNodeIds}
+          selectedNodeId={this.props.selectedNodeId}
           limit={1000} />
       </div>
     );
   }
 }
+
+
+export default connect(
+  () => ({}),
+  { clickNode }
+)(NodesGrid);

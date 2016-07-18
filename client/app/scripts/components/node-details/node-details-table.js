@@ -222,8 +222,7 @@ export default class NodeDetailsTable extends React.Component {
                 <NodeDetailsTableRow
                   key={node.id}
                   renderIdCell={this.props.renderIdCell}
-                  selected={this.props.highlightedNodeIds &&
-                    this.props.highlightedNodeIds.has(node.id)}
+                  selected={this.props.selectedNodeId === node.id}
                   node={node}
                   nodeIdKey={nodeIdKey}
                   widths={getColumnsWidths(this.getColumnHeaders())}

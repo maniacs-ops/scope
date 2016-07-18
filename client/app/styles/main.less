@@ -15,6 +15,7 @@
 /* weave company colours */
 @weave-gray-blue: rgb(85,105,145);
 @weave-blue: rgb(0,210,255);
+@weave-blue-transparent: rgb(0,210,255, 0.1);
 @weave-orange: rgb(255,75,25);
 @weave-charcoal-blue: rgb(50,50,75); // #32324B
 
@@ -1511,6 +1512,23 @@ h2 {
 
 .nodes-grid {
 
+  tr {
+    border-radius: 4px;
+  }
+
+  &-id-column {
+    margin: -3px -4px;
+    padding: 3px 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #d7ecf5;
+      border: 1px solid @weave-blue;
+    }
+  }
+
   .node-details-relatives {
     color: inherit;
     font-size: 90%;
@@ -1550,8 +1568,11 @@ h2 {
     }
 
     .node-details-table-node {
-      &:hover, &.selected {
-        background-color: @background-darker-color;
+      &:hover {
+        background-color: @background-lighter-color;
+      }
+      &.selected {
+        background-color: #d7ecf5;
       }
     }
   }
