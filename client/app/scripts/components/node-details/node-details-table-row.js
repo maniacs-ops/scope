@@ -42,6 +42,7 @@ function renderValues(node, columns = [], columnWidths = []) {
   });
 }
 
+
 export default class NodeDetailsTableRow extends React.Component {
 
   constructor(props, context) {
@@ -57,20 +58,23 @@ export default class NodeDetailsTableRow extends React.Component {
   render() {
     const { node, nodeIdKey, topologyId, columns, onMouseOverRow, selected, widths } = this.props;
     const [firstColumnWidth, ...columnWidths] = widths;
-    console.log(widths);
     const values = renderValues(node, columns, columnWidths);
     const nodeId = node[nodeIdKey];
     const className = classNames('node-details-table-node', { selected });
+
     return (
       <tr onMouseOver={onMouseOverRow && this.onMouseOver} className={className}>
-        <td className="node-details-table-node-label truncate" style={{ width: firstColumnWidth }}>
-          <NodeDetailsTableNodeLink
-            topologyId={topologyId}
-            nodeId={nodeId}
-            {...node} />
+        <td className="node-details-table-node-label truncate"
+          style={{ width: firstColumnWidth }}>
+          {this.props.renderIdCell(Object.assign(node, {topologyId, nodeId}))}
         </td>
         {values}
       </tr>
     );
   }
 }
+
+
+NodeDetailsTableRow.defaultProps = {
+  renderIdCell: (props) => <NodeDetailsTableNodeLink {...props} />
+};

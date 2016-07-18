@@ -5,8 +5,13 @@ import { Set as makeSet, List as makeList, Map as makeMap } from 'immutable';
 import NodeDetailsTable from '../components/node-details/node-details-table';
 import { enterNode, leaveNode } from '../actions/app-actions';
 
+import NodeDetailsRelatives from '../components/node-details/node-details-relatives';
+import NodeDetailsTableNodeLink from '../components/node-details/node-details-table-node-link';
+import { getNodeColor } from '../utils/color-utils';
 
-const IGNORED_COLUMNS = ['docker_container_ports'];
+
+const IGNORED_COLUMNS = ['docker_container_ports', 'docker_container_id', 'docker_image_id',
+  'docker_container_command', 'docker_container_networks'];
 
 
 function getColumns(nodes) {
@@ -18,6 +23,20 @@ function getColumns(nodes) {
     return metadata.concat(metrics);
   });
   return makeSet(allColumns).filter(n => !IGNORED_COLUMNS.includes(n.get('id'))).toJS();
+}
+
+
+function renderIdCell(props) {
+  const style = {
+    color: getNodeColor(props.rank, props.label_major)
+  };
+
+  return (
+    <div>
+      <i style={style} className="fa fa-square" /> <NodeDetailsTableNodeLink {...props} />
+      {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
+    </div>
+  );
 }
 
 
@@ -58,6 +77,7 @@ export default class NodesGrid extends React.Component {
         <NodeDetailsTable
           style={cmpStyle}
           className={className}
+          renderIdCell={renderIdCell}
           tbodyStyle={tbodyStyle}
           topologyId={this.props.topologyId}
           onMouseOut={this.onMouseOut}

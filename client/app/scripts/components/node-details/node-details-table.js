@@ -18,6 +18,11 @@ const COLUMN_WIDTHS = {
   process_cpu_usage_percent: '80px',
   threads: '80px',
   process_memory_usage_bytes: '80px',
+  docker_cpu_total_usage: '80px',
+  docker_memory_usage: '80px',
+  docker_container_uptime: '85px',
+  docker_container_restart_count: '80px',
+  docker_container_ips: '80px',
   open_files_count: '80px',
   ppid: '80px',
   pid: '80px',
@@ -94,7 +99,7 @@ function getColumnsWidths(headers) {
         return '66%';
       } else if (headers.length === 3) {
         return '50%';
-      } else if (headers.length >= 3 && headers.length < 5) {
+      } else if (headers.length >= 3) {
         return '33%';
       }
     }
@@ -216,6 +221,7 @@ export default class NodeDetailsTable extends React.Component {
               {nodes && nodes.map(node => (
                 <NodeDetailsTableRow
                   key={node.id}
+                  renderIdCell={this.props.renderIdCell}
                   selected={this.props.highlightedNodeIds &&
                     this.props.highlightedNodeIds.has(node.id)}
                   node={node}
