@@ -23,6 +23,8 @@ const COLUMN_WIDTHS = {
   docker_container_uptime: '85px',
   docker_container_restart_count: '80px',
   docker_container_ips: '80px',
+  docker_container_created: '100px',
+  docker_container_state_human: '120px',
   open_files_count: '80px',
   ppid: '80px',
   pid: '80px',

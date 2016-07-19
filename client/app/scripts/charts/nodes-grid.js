@@ -28,14 +28,18 @@ function getColumns(nodes) {
 
 function renderIdCell(props, onClick) {
   const style = {
+    width: 16,
+    flex: 'none',
     color: getNodeColor(props.rank, props.label_major)
   };
 
   return (
     <div className="nodes-grid-id-column" onClick={onClick}>
-      {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
-      <i style={style} className="fa fa-square" /> <span className="truncate">{props.label}
-      </span>
+      <div className="content">
+        <div style={style}><i className="fa fa-square" /></div>
+        <div className="truncate">{props.label}</div>
+        {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
+      </div>
     </div>
   );
 }
@@ -52,7 +56,7 @@ class NodesGrid extends React.Component {
   }
 
   clickRow(ev, nodeId, nodeLabel) {
-    if (ev.target.className !== 'nodes-grid-id-column') {
+    if (ev.target.className === 'node-details-relatives-link') {
       return;
     }
     this.props.clickNode(nodeId, nodeLabel);
