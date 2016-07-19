@@ -21,15 +21,16 @@ class GridModeSelector extends React.Component {
     return this.props.toggleGridMode(false);
   }
 
-  renderItem(icons, isSelected, onClick) {
-    const className = classNames('network-selector-action', {
-      'network-selector-action-selected': isSelected
+  renderItem(icons, label, isSelected, onClick) {
+    const className = classNames('grid-mode-selector-action', {
+      'grid-mode-selector-action-selected': isSelected
     });
     return (
       <div
         className={className}
         onClick={onClick} >
-        <span className={icons} style={{fontSize: 16}} />
+        <span className={icons} style={{fontSize: 12}} />
+        <span>{label}</span>
       </div>
     );
   }
@@ -38,10 +39,10 @@ class GridModeSelector extends React.Component {
     const { gridMode } = this.props;
 
     return (
-      <div className="network-selector">
-        <div className="network-selector-wrapper">
-          {this.renderItem('fa fa-th', !gridMode, this.disableGridMode)}
-          {this.renderItem('fa fa-bars', gridMode, this.enableGridMode)}
+      <div className="grid-mode-selector">
+        <div className="grid-mode-selector-wrapper">
+          {this.renderItem('fa fa-share-alt', 'Visualization', !gridMode, this.disableGridMode)}
+          {this.renderItem('fa fa-table', 'Table', gridMode, this.enableGridMode)}
         </div>
       </div>
     );
