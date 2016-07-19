@@ -1541,8 +1541,10 @@ h2 {
     .selected &, &:hover {
       .content {
         background-color: #d7ecf5;
-        border: 1px solid @weave-blue;
       }
+    }
+    .selected & .content {
+      border: 1px solid @weave-blue;
     }
   }
 
