@@ -33,9 +33,9 @@ function renderIdCell(props, onClick) {
 
   return (
     <div className="nodes-grid-id-column" onClick={onClick}>
+      {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
       <i style={style} className="fa fa-square" /> <span className="truncate">{props.label}
       </span>
-      {props.parents && <NodeDetailsRelatives relatives={props.parents} />}
     </div>
   );
 }
@@ -86,7 +86,6 @@ class NodesGrid extends React.Component {
     const className = 'scroll-body';
     const tbodyStyle = {
       height: `${tbodyHeight}px`,
-      paddingBottom: 160
     };
 
     const detailsData = {
