@@ -18,6 +18,7 @@ type Node struct {
 	Edges     EdgeMetadatas `json:"edges,omitempty"`
 	Controls  NodeControls  `json:"controls,omitempty"`
 	Latest    LatestMap     `json:"latest,omitempty"`
+	CMap      ConstMap      `json:"cmap,omitempty"`
 	Metrics   Metrics       `json:"metrics,omitempty"`
 	Parents   Sets          `json:"parents,omitempty"`
 	Children  NodeSet       `json:"children,omitempty"`
@@ -185,6 +186,7 @@ func (n Node) Copy() Node {
 	cp.Edges = n.Edges.Copy()
 	cp.Controls = n.Controls.Copy()
 	cp.Latest = n.Latest.Copy()
+	cp.CMap = n.CMap.Copy()
 	cp.Metrics = n.Metrics.Copy()
 	cp.Parents = n.Parents.Copy()
 	cp.Children = n.Children.Copy()
