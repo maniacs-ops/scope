@@ -123,7 +123,6 @@ export default class NodeDetailsTable extends React.Component {
     this.state = {
       limit: props.limit || this.DEFAULT_LIMIT,
       sortedDesc: this.props.sortedDesc,
-      // FIXME: make sure this is initialised to true if not provided (null/undefined).
       sortBy: this.props.sortBy
     };
     this.handleLimitClick = this.handleLimitClick.bind(this);
@@ -152,7 +151,7 @@ export default class NodeDetailsTable extends React.Component {
     if (this.props.nodes && this.props.nodes.length > 0) {
       const headers = this.getColumnHeaders();
       const widths = getColumnsWidths(headers);
-      const defaultSortBy = getDefaultSortBy(this.props);
+      const defaultSortBy = getDefaultSortBy(this.props.columns, this.props.nodes);
 
       return (
         <tr>
@@ -161,12 +160,11 @@ export default class NodeDetailsTable extends React.Component {
             const onHeaderClick = ev => {
               this.handleHeaderClick(ev, header.id);
             };
-
             // sort by first metric by default
-            const isSorted = this.state.sortBy !== null
-              ? header.id === this.state.sortBy : header.id === defaultSortBy;
+            const isSorted = header.id === (this.state.sortBy || defaultSortBy);
             const isSortedDesc = isSorted && this.state.sortedDesc;
             const isSortedAsc = isSorted && !isSortedDesc;
+
             if (isSorted) {
               headerClasses.push('node-details-table-header-sorted');
             }
@@ -252,4 +250,5 @@ export default class NodeDetailsTable extends React.Component {
 NodeDetailsTable.defaultProps = {
   nodeIdKey: 'id',  // key to identify a node in a row (used for topology links)
   onSortChange: () => {},
+  sortedDesc: true,
 };
