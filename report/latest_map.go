@@ -2,7 +2,6 @@ package report
 
 import (
 	"bytes"
-	"encoding/gob"
 	"fmt"
 	"sort"
 	"time"
@@ -11,7 +10,7 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
-// LatestMap is a persitent map which support latest-win merges. We have to
+// LatestMap is a persistent map which supports latest-win merges. We have to
 // embed ps.Map as its an interface.  LatestMaps are immutable.
 type LatestMap struct {
 	ps.Map
@@ -178,12 +177,12 @@ func (m LatestMap) toIntermediate() map[string]LatestEntry {
 	return intermediate
 }
 
-func (m LatestMap) fromIntermediate(in map[string]LatestEntry) LatestMap {
-	out := ps.NewMap()
+func (m *LatestMap) fromIntermediate(in map[string]LatestEntry) {
+	m.Map = ps.NewMap()
 	for k, v := range in {
-		out = out.Set(k, v)
+		m.Map = m.Map.Set(k, v)
 	}
-	return LatestMap{out}
+
 }
 
 // CodecEncodeSelf implements codec.Selfer
@@ -197,11 +196,11 @@ func (m *LatestMap) CodecEncodeSelf(encoder *codec.Encoder) {
 
 // CodecDecodeSelf implements codec.Selfer
 func (m *LatestMap) CodecDecodeSelf(decoder *codec.Decoder) {
-	in := map[string]LatestEntry{}
+	var in map[string]LatestEntry
 	if err := decoder.Decode(&in); err != nil {
 		return
 	}
-	*m = LatestMap{}.fromIntermediate(in)
+	m.fromIntermediate(in)
 }
 
 // MarshalJSON shouldn't be used, use CodecEncodeSelf instead
@@ -212,21 +211,4 @@ func (LatestMap) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON shouldn't be used, use CodecDecodeSelf instead
 func (*LatestMap) UnmarshalJSON(b []byte) error {
 	panic("UnmarshalJSON shouldn't be used, use CodecDecodeSelf instead")
-}
-
-// GobEncode implements gob.Marshaller
-func (m LatestMap) GobEncode() ([]byte, error) {
-	buf := bytes.Buffer{}
-	err := gob.NewEncoder(&buf).Encode(m.toIntermediate())
-	return buf.Bytes(), err
-}
-
-// GobDecode implements gob.Unmarshaller
-func (m *LatestMap) GobDecode(input []byte) error {
-	in := map[string]LatestEntry{}
-	if err := gob.NewDecoder(bytes.NewBuffer(input)).Decode(&in); err != nil {
-		return err
-	}
-	*m = LatestMap{}.fromIntermediate(in)
-	return nil
 }
