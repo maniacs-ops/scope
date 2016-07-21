@@ -23,7 +23,7 @@ const COLUMN_WIDTHS = {
   docker_container_uptime: '85px',
   docker_container_restart_count: '80px',
   docker_container_ips: '80px',
-  docker_container_created: '100px',
+  docker_container_created: '110px',
   docker_container_state_human: '120px',
   open_files_count: '80px',
   ppid: '80px',
@@ -194,7 +194,7 @@ export default class NodeDetailsTable extends React.Component {
 
   render() {
     const headers = this.renderHeaders();
-    const { nodeIdKey, columns, topologyId, onMouseOverRow } = this.props;
+    const { nodeIdKey, columns, topologyId, onMouseEnterRow, onMouseLeaveRow } = this.props;
     let nodes = getSortedNodes(this.props.nodes, this.props.columns, this.state.sortBy,
                                     this.state.sortedDesc);
     const limited = nodes && this.state.limit > 0 && nodes.length > this.state.limit;
@@ -214,7 +214,7 @@ export default class NodeDetailsTable extends React.Component {
 
     return (
       <div className={className} style={this.props.style}>
-        <div className="node-details-table-wrapper" onMouseOut={this.props.onMouseOut}>
+        <div className="node-details-table-wrapper">
           <table className="node-details-table">
             <thead>
               {headers}
@@ -229,7 +229,8 @@ export default class NodeDetailsTable extends React.Component {
                   nodeIdKey={nodeIdKey}
                   widths={getColumnsWidths(this.getColumnHeaders())}
                   columns={columns}
-                  onMouseOverRow={onMouseOverRow}
+                  onMouseLeaveRow={onMouseLeaveRow}
+                  onMouseEnterRow={onMouseEnterRow}
                   topologyId={topologyId} />
               ))}
             </tbody>

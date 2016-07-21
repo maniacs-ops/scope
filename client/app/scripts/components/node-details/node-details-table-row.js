@@ -47,23 +47,33 @@ export default class NodeDetailsTableRow extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
   }
 
-  onMouseOver() {
-    const { node, onMouseOverRow } = this.props;
-    onMouseOverRow(node);
+  onMouseEnter() {
+    const { node, onMouseEnterRow } = this.props;
+    onMouseEnterRow(node);
+  }
+
+  onMouseLeave() {
+    const { node, onMouseLeaveRow } = this.props;
+    onMouseLeaveRow(node);
   }
 
   render() {
-    const { node, nodeIdKey, topologyId, columns, onMouseOverRow, selected, widths } = this.props;
+    const { node, nodeIdKey, topologyId, columns, onMouseEnterRow, onMouseLeaveRow, selected,
+      widths } = this.props;
     const [firstColumnWidth, ...columnWidths] = widths;
     const values = renderValues(node, columns, columnWidths);
     const nodeId = node[nodeIdKey];
     const className = classNames('node-details-table-node', { selected });
 
     return (
-      <tr onMouseOver={onMouseOverRow && this.onMouseOver} className={className}>
+      <tr
+        onMouseEnter={onMouseEnterRow && this.onMouseEnter}
+        onMouseLeave={onMouseLeaveRow && this.onMouseLeave}
+        className={className}>
         <td className="node-details-table-node-label truncate"
           style={{ width: firstColumnWidth }}>
           {this.props.renderIdCell(Object.assign(node, {topologyId, nodeId}))}

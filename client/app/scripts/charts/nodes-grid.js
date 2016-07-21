@@ -4,7 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { List as makeList, Map as makeMap } from 'immutable';
 import NodeDetailsTable from '../components/node-details/node-details-table';
-import { clickNode, enterNode, leaveNode, sortOrderChanged } from '../actions/app-actions';
+import { clickNode, sortOrderChanged, clickPauseUpdate,
+  clickResumeUpdate } from '../actions/app-actions';
 
 import NodeDetailsRelatives from '../components/node-details/node-details-relatives';
 import { getNodeColor } from '../utils/color-utils';
@@ -68,7 +69,10 @@ class NodesGrid extends React.Component {
 
     this.renderIdCell = this.renderIdCell.bind(this);
     this.clickRow = this.clickRow.bind(this);
+
     this.onSortChange = this.onSortChange.bind(this);
+    this.onMouseEnterRow = this.onMouseEnterRow.bind(this);
+    this.onMouseLeaveRow = this.onMouseLeaveRow.bind(this);
   }
 
   clickRow(ev, nodeId, nodeLabel) {
@@ -82,12 +86,12 @@ class NodesGrid extends React.Component {
     return renderIdCell(props, (ev) => this.clickRow(ev, props.id, props.label));
   }
 
-  onMouseOverRow(node) {
-    enterNode(node.id);
+  onMouseEnterRow() {
+    this.props.clickPauseUpdate();
   }
 
-  onMouseOut() {
-    leaveNode();
+  onMouseLeaveRow() {
+    this.props.clickResumeUpdate();
   }
 
   onSortChange(sortBy, sortedDesc) {
@@ -123,8 +127,8 @@ class NodesGrid extends React.Component {
           renderIdCell={this.renderIdCell}
           tbodyStyle={tbodyStyle}
           topologyId={this.props.topologyId}
-          onMouseOut={this.onMouseOut}
-          onMouseOverRow={this.onMouseOverRow}
+          onMouseLeaveRow={this.onMouseLeaveRow}
+          onMouseEnterRow={this.onMouseEnterRow}
           onSortChange={this.onSortChange}
           {...detailsData}
           sortBy={gridSortBy}
@@ -139,5 +143,5 @@ class NodesGrid extends React.Component {
 
 export default connect(
   () => ({}),
-  { clickNode, sortOrderChanged }
+  { clickNode, sortOrderChanged, clickPauseUpdate, clickResumeUpdate }
 )(NodesGrid);
