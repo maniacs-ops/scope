@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Set as makeSet, List as makeList, Map as makeMap } from 'immutable';
+import { List as makeList, Map as makeMap } from 'immutable';
 import NodeDetailsTable from '../components/node-details/node-details-table';
 import { clickNode, enterNode, leaveNode, sortOrderChanged } from '../actions/app-actions';
 
@@ -15,14 +15,30 @@ const IGNORED_COLUMNS = ['docker_container_ports', 'docker_container_id', 'docke
 
 
 function getColumns(nodes) {
-  const allColumns = nodes.toList().flatMap(n => {
-    const metrics = (n.get('metrics') || makeList())
-      .map(m => makeMap({ id: m.get('id'), label: m.get('label') }));
-    const metadata = (n.get('metadata') || makeList())
-      .map(m => makeMap({ id: m.get('id'), label: m.get('label') }));
-    return metadata.concat(metrics);
-  });
-  return makeSet(allColumns).filter(n => !IGNORED_COLUMNS.includes(n.get('id'))).toJS();
+  const metricColumns = nodes
+    .toList()
+    .flatMap(n => {
+      const metrics = (n.get('metrics') || makeList())
+        .map(m => makeMap({ id: m.get('id'), label: m.get('label') }));
+      return metrics;
+    })
+    .toSet()
+    .toList()
+    .sortBy(m => m.get('label'));
+
+  const metadataColumns = nodes
+    .toList()
+    .flatMap(n => {
+      const metadata = (n.get('metadata') || makeList())
+        .map(m => makeMap({ id: m.get('id'), label: m.get('label') }));
+      return metadata;
+    })
+    .toSet()
+    .filter(n => !IGNORED_COLUMNS.includes(n.get('id')))
+    .toList()
+    .sortBy(m => m.get('label'));
+
+  return metadataColumns.concat(metricColumns).toJS();
 }
 
 
